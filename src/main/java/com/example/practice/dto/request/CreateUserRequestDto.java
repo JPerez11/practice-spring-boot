@@ -35,6 +35,6 @@ public class CreateUserRequestDto {
     @NotBlank(message = "Password field cannot be empty")
     private String password;
     @NotBlank(message = "Role field cannot be empty")
-    private String role;
+    private String roleName;
 
 }

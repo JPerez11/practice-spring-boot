@@ -5,6 +5,7 @@ import com.example.practice.dto.request.UpdateUserRequestDto;
 import com.example.practice.dto.response.UserResponseDto;
 import com.example.practice.entities.RoleEntity;
 import com.example.practice.entities.UserEntity;
+import com.example.practice.exceptions.RoleNotFoundException;
 import com.example.practice.mappers.UserRequestMapper;
 import com.example.practice.mappers.UserResponseMapper;
 import com.example.practice.repositories.RoleRepository;
@@ -29,9 +30,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(CreateUserRequestDto userRequest) {
         UserEntity user = userRequestMapper.toEntity(userRequest);
-        RoleEntity role = roleRepository.findRoleEntityByName(userRequest.getRole()).orElse(null);
+        RoleEntity role = roleRepository.findRoleEntityByName(userRequest.getRoleName()).orElse(null);
         if (role == null) {
-            //TODO create a custom exception
+            throw new RoleNotFoundException();
         }
         user.setRole(role);
         return userResponseMapper.toResponse(

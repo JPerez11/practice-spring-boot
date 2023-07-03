@@ -11,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserRequestMapper {
 
-    @Mapping(target = "role.name", source = "role")
+    @Mapping(target = "role.name", source = "roleName")
     UserEntity toEntity(CreateUserRequestDto createUserRequestDto);
 
 }
