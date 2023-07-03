@@ -5,7 +5,11 @@ import com.example.practice.dto.request.UpdateUserRequestDto;
 import com.example.practice.dto.response.UserResponseDto;
 import com.example.practice.entities.RoleEntity;
 import com.example.practice.entities.UserEntity;
+import com.example.practice.exceptions.DocumentNumberAlreadyExistsException;
+import com.example.practice.exceptions.EmailAlreadyExistsException;
+import com.example.practice.exceptions.NoDataFoundException;
 import com.example.practice.exceptions.RoleNotFoundException;
+import com.example.practice.exceptions.UserNotFoundException;
 import com.example.practice.mappers.UserRequestMapper;
 import com.example.practice.mappers.UserResponseMapper;
 import com.example.practice.repositories.RoleRepository;
@@ -30,6 +34,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(CreateUserRequestDto userRequest) {
         UserEntity user = userRequestMapper.toEntity(userRequest);
+        if (userRepository.existsByDocumentNumber(user.getDocumentNumber())) {
+            throw new DocumentNumberAlreadyExistsException();
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new EmailAlreadyExistsException();
+        }
         RoleEntity role = roleRepository.findRoleEntityByName(userRequest.getRoleName()).orElse(null);
         if (role == null) {
             throw new RoleNotFoundException();
@@ -44,7 +54,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getUserById(Long userId) {
         UserEntity user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            //TODO create a custom exception
+            throw new UserNotFoundException();
         }
         return userResponseMapper.toResponse(user);
     }
@@ -53,7 +63,7 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDto> listUsers() {
         List<UserEntity> userList = userRepository.findAll();
         if (userList.isEmpty()) {
-            //TODO create a custom exception
+            throw new NoDataFoundException();
         }
         return userResponseMapper.toResponseList(userList);
     }
@@ -62,8 +72,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto updateUser(UpdateUserRequestDto userRequest, Long userId) {
         UserEntity user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            throw new NullPointerException();
-            //TODO create a custom exception
+            throw new UserNotFoundException();
         }
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());

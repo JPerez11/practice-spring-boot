@@ -20,17 +20,17 @@ public class CreateUserRequestDto {
     private String firstName;
     @NotBlank(message = "Last name field cannot be empty")
     private String lastName;
-    @Pattern(regexp = "^\\d{10,14}$", message = "Document number field must meet a range of numbers between 10 and 14")
     @NotBlank(message = "Document number field cannot be empty")
+    @Pattern(regexp = "^\\d{10,14}$", message = "Document number field must meet a range of numbers between 10 and 14")
     private String documentNumber;
-    @Pattern(regexp = "^\\d{10,14}$", message = "Phone number field must meet a range of numbers between 10 and 14")
     @NotBlank(message = "Phone number field cannot be empty")
+    @Pattern(regexp = "^\\d{10,14}$", message = "Phone number field must meet a range of numbers between 10 and 14")
     private String phoneNumber;
-    @Past
     @NotNull(message = "Birthday field cannot be empty")
+    @Past
     private LocalDate birthday;
-    @Email
     @NotBlank(message = "Email field cannot be empty")
+    @Email
     private String email;
     @NotBlank(message = "Password field cannot be empty")
     private String password;

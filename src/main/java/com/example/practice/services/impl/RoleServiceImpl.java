@@ -3,6 +3,7 @@ package com.example.practice.services.impl;
 import com.example.practice.dto.request.CreateRoleRequestDto;
 import com.example.practice.dto.response.RoleResponseDto;
 import com.example.practice.entities.RoleEntity;
+import com.example.practice.exceptions.NoDataFoundException;
 import com.example.practice.exceptions.RoleNotFoundException;
 import com.example.practice.mappers.RoleRequestMapper;
 import com.example.practice.mappers.RoleResponseMapper;
@@ -26,7 +27,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleResponseDto createRole(CreateRoleRequestDto roleRequest) {
         if (roleRequest == null) {
-            //TODO create a custom exception
+            throw new NullPointerException();
         }
         return roleResponseMapper.toResponse(
                 roleRepository.save(
@@ -48,7 +49,7 @@ public class RoleServiceImpl implements RoleService {
     public List<RoleResponseDto> listRoles() {
         List<RoleEntity> list = roleRepository.findAll();
         if (list.isEmpty()) {
-            //TODO create a custom exception
+            throw new NoDataFoundException();
         }
         return roleResponseMapper.toResponseList(list);
     }
