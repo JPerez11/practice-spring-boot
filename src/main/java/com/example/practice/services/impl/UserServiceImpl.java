@@ -16,6 +16,7 @@ import com.example.practice.repositories.RoleRepository;
 import com.example.practice.repositories.UserRepository;
 import com.example.practice.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserRequestMapper userRequestMapper;
     private final UserResponseMapper userResponseMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDto createUser(CreateUserRequestDto userRequest) {
@@ -44,6 +46,7 @@ public class UserServiceImpl implements UserService {
         if (role == null) {
             throw new RoleNotFoundException();
         }
+        user.setPassword( passwordEncoder.encode(user.getPassword()) );
         user.setRole(role);
         return userResponseMapper.toResponse(
                 userRepository.save(user)
